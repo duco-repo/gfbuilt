@@ -144,7 +144,7 @@ require (
 	github.com/mocktools/go-smtp-mock/v2 v2.5.1 // @grafana/grafana-backend-group
 	github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee // @grafana/alerting-backend
 	github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f // @grafana/grafana-operator-experience-squad
-	github.com/olekukonko/tablewriter v0.0.5 // @grafana/grafana-backend-group
+	github.com/olekukonko/tablewriter v1.1.2 // @grafana/grafana-backend-group
 	github.com/open-feature/go-sdk v1.16.0 // @grafana/grafana-backend-group
 	github.com/open-feature/go-sdk-contrib/providers/go-feature-flag v0.2.6 // @grafana/grafana-backend-group
 	github.com/openfga/api/proto v0.0.0-20250909172242-b4b2a12f5c67 // @grafana/identity-access-team
@@ -503,7 +503,7 @@ require (
 	github.com/mattetti/filebuffer v1.0.1 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-ieproxy v0.0.12 // indirect
-	github.com/mattn/go-runewidth v0.0.16 // indirect
+	github.com/mattn/go-runewidth v0.0.19 // indirect
 	github.com/maypok86/otter v1.2.4 // indirect
 	github.com/mdlayher/socket v0.4.1 // indirect
 	github.com/mdlayher/vsock v1.2.1 // indirect
@@ -558,7 +558,6 @@ require (
 	github.com/puzpuzpuz/xsync/v2 v2.5.1 // indirect
 	github.com/redis/rueidis v1.0.64 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
-	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
@@ -654,6 +653,9 @@ require (
 )
 
 require (
+	github.com/clipperhouse/displaywidth v0.6.0 // indirect
+	github.com/clipperhouse/stringish v0.1.1 // indirect
+	github.com/clipperhouse/uax29/v2 v2.3.0 // indirect
 	github.com/go-openapi/swag/conv v0.25.1 // indirect
 	github.com/go-openapi/swag/fileutils v0.25.1 // indirect
 	github.com/go-openapi/swag/jsonname v0.25.1 // indirect
@@ -663,6 +665,9 @@ require (
 	github.com/go-openapi/swag/stringutils v0.25.1 // indirect
 	github.com/go-openapi/swag/typeutils v0.25.1 // indirect
 	github.com/go-openapi/swag/yamlutils v0.25.1 // indirect
+	github.com/olekukonko/cat v0.0.0-20250911104152-50322a0618f6 // indirect
+	github.com/olekukonko/errors v1.1.0 // indirect
+	github.com/olekukonko/ll v0.1.3 // indirect
 )
 
 // Use fork of crewjam/saml with fixes for some issues until changes get merged into upstream
