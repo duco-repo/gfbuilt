@@ -15,6 +15,7 @@ const getStyles = (theme: GrafanaTheme2) => {
       flexDirection: 'row-reverse',
       justifyContent: 'space-between',
       position: 'relative',
+      marginTop: '1px',
     }),
     radio: css({
       opacity: 0,

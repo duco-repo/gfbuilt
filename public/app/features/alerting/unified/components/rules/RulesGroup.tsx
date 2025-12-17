@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import React, { useEffect, useState } from 'react';
 
-import { GrafanaTheme2 } from '@grafana/data';
+import { GrafanaTheme2, OrgRole } from '@grafana/data';
 import { selectors } from '@grafana/e2e-selectors';
 import { Trans, t } from '@grafana/i18n';
 import { Badge, Icon, Spinner, Stack, Tooltip, useStyles2 } from '@grafana/ui';
@@ -23,6 +23,8 @@ import { FolderActionsButton } from '../folder-actions/FolderActionsButton';
 import { ActionIcon } from './ActionIcon';
 import { RuleGroupStats } from './RuleStats';
 import { RulesTable, useIsRulesLoading } from './RulesTable';
+
+import { contextSrv } from 'app/core/services/context_srv';
 
 type ViewMode = 'grouped' | 'list';
 
@@ -67,6 +69,8 @@ export const RulesGroup = React.memo(({ group, namespace, expandAll, viewMode }:
   const isPluginProvided = group.rules.some((rule) => isPluginProvidedRule(rule.rulerRule ?? rule.promRule));
 
   const canEditGroup = hasRuler && !isProvisioned && !isFederated && !isPluginProvided && canEditRules(rulesSourceName);
+
+  const isViewerRole = contextSrv.user.orgRole === OrgRole.Viewer;
 
   // check what view mode we are in
   const isListView = viewMode === 'list';
@@ -139,6 +143,7 @@ export const RulesGroup = React.memo(({ group, namespace, expandAll, viewMode }:
           actionIcons.push(<FolderActionsButton folderUID={folderUID} key="folder-bulk-actions" />);
         }
       }
+      //unchanged
     }
   } else {
     actionIcons.push(

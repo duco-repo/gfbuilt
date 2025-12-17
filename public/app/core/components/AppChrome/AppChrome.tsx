@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { Resizable } from 're-resizable';
 import { PropsWithChildren, useEffect } from 'react';
 
-import { GrafanaTheme2 } from '@grafana/data';
+import { GrafanaTheme2, OrgRole } from '@grafana/data';
 import { Trans } from '@grafana/i18n';
 import { locationSearchToObject, locationService, useScopes } from '@grafana/runtime';
 import { ErrorBoundaryAlert, floatingUtils, getDragStyles, LinkButton, useStyles2 } from '@grafana/ui';
@@ -26,6 +26,8 @@ import { useMegaMenuFocusHelper } from './MegaMenu/utils';
 import { ReturnToPrevious } from './ReturnToPrevious/ReturnToPrevious';
 import { SingleTopBar } from './TopBar/SingleTopBar';
 import { getChromeHeaderLevelHeight, useChromeHeaderLevels } from './TopBar/useChromeHeaderHeight';
+import { contextSrv } from 'app/core/services/context_srv';
+
 
 export interface Props extends PropsWithChildren<{}> {}
 
@@ -38,8 +40,8 @@ export function AppChrome({ children }: Props) {
   } = useExtensionSidebarContext();
   const state = chrome.useState();
   const scopes = useScopes();
-
-  const menuDockedAndOpen = !state.chromeless && state.megaMenuDocked && state.megaMenuOpen;
+  const isViewerRole = contextSrv.user.orgRole === OrgRole.Viewer;
+  const menuDockedAndOpen = !state.chromeless && !isViewerRole && state.megaMenuDocked && state.megaMenuOpen;
   const isScopesDashboardsOpen = Boolean(
     scopes?.state.enabled && scopes?.state.drawerOpened && !scopes?.state.readOnly
   );
@@ -55,7 +57,7 @@ export function AppChrome({ children }: Props) {
 
   const contentClass = cx({
     [styles.content]: true,
-    [styles.contentChromeless]: state.chromeless,
+    [styles.contentChromeless]: state.chromeless || isViewerRole,
     [styles.contentWithSidebar]: isExtensionSidebarOpen && !state.chromeless,
   });
 
@@ -89,10 +91,10 @@ export function AppChrome({ children }: Props) {
     <div
       id={floatingUtils.BOUNDARY_ELEMENT_ID}
       className={classNames('main-view', {
-        'main-view--chrome-hidden': state.chromeless,
+        'main-view--chrome-hidden': state.chromeless || isViewerRole,
       })}
     >
-      {!state.chromeless && (
+       {!state.chromeless && !isViewerRole && (
         <>
           <LinkButton className={styles.skipLink} href="#pageContent">
             <Trans i18nKey="app-chrome.skip-content-button">Skip to main content</Trans>
@@ -100,7 +102,11 @@ export function AppChrome({ children }: Props) {
           {menuDockedAndOpen && (
             <MegaMenu className={styles.dockedMegaMenu} onClose={() => chrome.setMegaMenuOpen(false)} />
           )}
-          <header className={cx(styles.topNav, menuDockedAndOpen && styles.topNavMenuDocked)}>
+          <header className={cx(
+            styles.topNav,
+            menuDockedAndOpen && styles.topNavMenuDocked,
+            'dsb-entry-header'
+          )}>
             <SingleTopBar
               sectionNav={state.sectionNav.node}
               pageNav={state.pageNav}
@@ -116,7 +122,7 @@ export function AppChrome({ children }: Props) {
       )}
       <div className={contentClass}>
         <div className={cx(styles.panes, { [styles.panesWithSidebar]: isExtensionSidebarOpen })}>
-          {!state.chromeless && (
+        {!state.chromeless && !isViewerRole && (
             <div
               className={cx(styles.scopesDashboardsContainer, {
                 [styles.scopesDashboardsContainerDocked]: menuDockedAndOpen,
@@ -129,7 +135,7 @@ export function AppChrome({ children }: Props) {
           )}
           <main
             className={cx(styles.pageContainer, {
-              [styles.pageContainerMenuDocked]: menuDockedAndOpen || isScopesDashboardsOpen,
+              [styles.pageContainerMenuDocked]: (menuDockedAndOpen || isScopesDashboardsOpen),
               [styles.pageContainerMenuDockedScopes]: menuDockedAndOpen && isScopesDashboardsOpen,
               [styles.pageContainerWithSidebar]: !state.chromeless && isExtensionSidebarOpen,
               [contentSizeStyles.contentWidth]: !state.chromeless && isExtensionSidebarOpen,
@@ -153,8 +159,8 @@ export function AppChrome({ children }: Props) {
           )}
         </div>
       </div>
-      {!state.chromeless && !state.megaMenuDocked && <AppChromeMenu />}
-      {!state.chromeless && <CommandPalette />}
+      {!state.chromeless && !isViewerRole && !state.megaMenuDocked && <AppChromeMenu />}
+      {!state.chromeless && !isViewerRole && <CommandPalette />}
       {shouldShowReturnToPrevious && state.returnToPrevious && (
         <ReturnToPrevious href={state.returnToPrevious.href} title={state.returnToPrevious.title} />
       )}

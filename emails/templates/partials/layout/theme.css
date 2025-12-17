@@ -16,20 +16,20 @@
 }
 
 .well {
-  background-color: #F4F5F5;
+  background-color: #F3F5F9;
   border: 1px solid #e4e5e6;
 }
 
 .txt div, .token div {
-  color: #24292e;
+  color: #262E42;
 }
 
 .txt tbody tr td {
-  color: #24292e;
+  color: #262E42;
 }
 
 .token {
-  background-color: #F4F5F5;
+  background-color: #F3F5F9;
   border: 1px solid #e4e5e6;
 
   padding: 10px 25px;

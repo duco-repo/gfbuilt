@@ -37,6 +37,8 @@ export function PanelHeaderMenuProvider({ panel, dashboard, loadingState, childr
     setItems(getPanelMenu(dashboard, panel, links));
   }, [dashboard, panel, loadingState, setItems, links]);
 
+  console.log('items >>', items);
+
   return children({ items });
 }
 

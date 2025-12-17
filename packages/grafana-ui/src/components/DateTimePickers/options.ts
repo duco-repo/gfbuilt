@@ -32,14 +32,10 @@ export const getQuickOptions: () => TimeOption[] = () => [
   { from: 'now-7d', to: 'now', display: t('grafana-ui.date-time-pickers.quick-options.last-7-days', 'Last 7 days') },
   { from: 'now-30d', to: 'now', display: t('grafana-ui.date-time-pickers.quick-options.last-30-days', 'Last 30 days') },
   { from: 'now-90d', to: 'now', display: t('grafana-ui.date-time-pickers.quick-options.last-90-days', 'Last 90 days') },
-  {
-    from: 'now-6M',
-    to: 'now',
-    display: t('grafana-ui.date-time-pickers.quick-options.last-6-months', 'Last 6 months'),
-  },
-  { from: 'now-1y', to: 'now', display: t('grafana-ui.date-time-pickers.quick-options.last-1-year', 'Last 1 year') },
-  { from: 'now-2y', to: 'now', display: t('grafana-ui.date-time-pickers.quick-options.last-2-years', 'Last 2 years') },
-  { from: 'now-5y', to: 'now', display: t('grafana-ui.date-time-pickers.quick-options.last-5-years', 'Last 5 years') },
+  // { from: 'now-6M', to: 'now', display: 'Last 6 months' },
+  // { from: 'now-1y', to: 'now', display: 'Last 1 year' },
+  // { from: 'now-2y', to: 'now', display: 'Last 2 years' },
+  // { from: 'now-5y', to: 'now', display: 'Last 5 years' },
   { from: 'now-1d/d', to: 'now-1d/d', display: t('grafana-ui.date-time-pickers.quick-options.yesterday', 'Yesterday') },
   {
     from: 'now-2d/d',
@@ -61,21 +57,9 @@ export const getQuickOptions: () => TimeOption[] = () => [
     to: 'now-1M/M',
     display: t('grafana-ui.date-time-pickers.quick-options.previous-month', 'Previous month'),
   },
-  {
-    from: 'now-1Q/fQ',
-    to: 'now-1Q/fQ',
-    display: t('grafana-ui.date-time-pickers.quick-options.previous-fiscal-quarter', 'Previous fiscal quarter'),
-  },
-  {
-    from: 'now-1y/y',
-    to: 'now-1y/y',
-    display: t('grafana-ui.date-time-pickers.quick-options.previous-year', 'Previous year'),
-  },
-  {
-    from: 'now-1y/fy',
-    to: 'now-1y/fy',
-    display: t('grafana-ui.date-time-pickers.quick-options.previous-fiscal-year', 'Previous fiscal year'),
-  },
+  // { from: 'now-1Q/fQ', to: 'now-1Q/fQ', display: 'Previous fiscal quarter' },
+  // { from: 'now-1y/y', to: 'now-1y/y', display: 'Previous year' },
+  // { from: 'now-1y/fy', to: 'now-1y/fy', display: 'Previous fiscal year' },
   { from: 'now/d', to: 'now/d', display: t('grafana-ui.date-time-pickers.quick-options.today', 'Today') },
   { from: 'now/d', to: 'now', display: t('grafana-ui.date-time-pickers.quick-options.today-so-far', 'Today so far') },
   { from: 'now/w', to: 'now/w', display: t('grafana-ui.date-time-pickers.quick-options.this-week', 'This week') },
@@ -90,12 +74,8 @@ export const getQuickOptions: () => TimeOption[] = () => [
     to: 'now',
     display: t('grafana-ui.date-time-pickers.quick-options.this-month-so-far', 'This month so far'),
   },
-  { from: 'now/y', to: 'now/y', display: t('grafana-ui.date-time-pickers.quick-options.this-year', 'This year') },
-  {
-    from: 'now/y',
-    to: 'now',
-    display: t('grafana-ui.date-time-pickers.quick-options.this-year-so-far', 'This year so far'),
-  },
+  // { from: 'now/y', to: 'now/y', display: 'This year' },
+  // { from: 'now/y', to: 'now', display: 'This year so far' },
   {
     from: 'now/fQ',
     to: 'now',
@@ -106,16 +86,8 @@ export const getQuickOptions: () => TimeOption[] = () => [
     to: 'now/fQ',
     display: t('grafana-ui.date-time-pickers.quick-options.this-fiscal-quarter', 'This fiscal quarter'),
   },
-  {
-    from: 'now/fy',
-    to: 'now',
-    display: t('grafana-ui.date-time-pickers.quick-options.this-fiscal-year-so-far', 'This fiscal year so far'),
-  },
-  {
-    from: 'now/fy',
-    to: 'now/fy',
-    display: t('grafana-ui.date-time-pickers.quick-options.this-fiscal-year', 'This fiscal year'),
-  },
+  // { from: 'now/fy', to: 'now', display: 'This fiscal year so far' },
+  // { from: 'now/fy', to: 'now/fy', display: 'This fiscal year' },
 ];
 
 export const getMonthOptions: () => Array<ComboboxOption<number>> = () => [

@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 import { GrafanaTheme2 } from '@grafana/data';
 import { Trans, t } from '@grafana/i18n';
 import { config } from '@grafana/runtime';
-import { Dropdown, EmptyState, LinkButton, Menu, MenuItem, Stack, Text, TextLink, useStyles2 } from '@grafana/ui';
+import { Dropdown, EmptyState, LinkButton, Menu, MenuItem, Stack, Text, useStyles2 } from '@grafana/ui';
 
 import { RuleFormType, RuleFormValues } from '../../types/rule-form';
 import { useRulesAccess } from '../../utils/accessControlHooks';
@@ -87,12 +87,12 @@ export const NoRulesSplash = () => {
           ) : null
         }
       >
-        <Trans i18nKey="alerting.list-view.empty.provisioning">
+        {/* <Trans i18nKey="alerting.list-view.empty.provisioning">
           You can also define rules through file provisioning or Terraform
         </Trans>
         <TextLink href="https://grafana.com/docs/grafana/latest/alerting/set-up/provision-alerting-resources/" external>
           <Trans i18nKey="alerting.common.learn-more">Learn more</Trans>
-        </TextLink>
+        </TextLink> */}
       </EmptyState>
     </div>
   );
@@ -110,7 +110,7 @@ export function GrafanaNoRulesCTA() {
     >
       <Stack direction="column" alignItems="center" justifyContent="center" gap={2}>
         <Stack direction="row" alignItems="center" justifyContent="center">
-          <Trans i18nKey="alerting.list-view.empty.provisioning">
+          {/* <Trans i18nKey="alerting.list-view.empty.provisioning">
             You can also define rules through file provisioning or Terraform
           </Trans>
           <TextLink
@@ -118,7 +118,7 @@ export function GrafanaNoRulesCTA() {
             external
           >
             <Trans i18nKey="alerting.common.learn-more">Learn more</Trans>
-          </TextLink>
+          </TextLink> */}
         </Stack>
         <Stack direction="row" alignItems="center" justifyContent="center">
           {canCreateGrafanaRules && (

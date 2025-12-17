@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import useAsync from 'react-use/lib/useAsync';
-
-import { DataSourceApi, PanelData, PanelPlugin } from '@grafana/data';
+import { contextSrv } from 'app/core/services/context_srv';
+import { DataSourceApi, OrgRole, PanelData, PanelPlugin } from '@grafana/data';
 import { t } from '@grafana/i18n';
 import { getDataSourceSrv } from '@grafana/runtime';
 import { DashboardModel } from 'app/features/dashboard/state/DashboardModel';
@@ -47,6 +47,7 @@ export const useInspectTabs = (
   metaDs?: DataSourceApi
 ) => {
   return useMemo(() => {
+    const isViewerRole = contextSrv.user.orgRole === OrgRole.Viewer;
     const tabs = [];
     if (supportsDataQuery(plugin)) {
       tabs.push({ label: t('dashboard.inspect.data-tab', 'Data'), value: InspectTab.Data });
@@ -57,7 +58,9 @@ export const useInspectTabs = (
       tabs.push({ label: t('dashboard.inspect.meta-tab', 'Meta data'), value: InspectTab.Meta });
     }
 
-    tabs.push({ label: t('dashboard.inspect.json-tab', 'JSON'), value: InspectTab.JSON });
+    if (contextSrv.isEditor || !isViewerRole) {
+      tabs.push({ label: t('dashboard.inspect.json-tab', 'JSON'), value: InspectTab.JSON });
+    }
 
     if (hasError) {
       tabs.push({ label: t('dashboard.inspect.error-tab', 'Error'), value: InspectTab.Error });

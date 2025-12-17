@@ -3,10 +3,10 @@ import { css } from '@emotion/css';
 import { GrafanaTheme2 } from '@grafana/data';
 import { t } from '@grafana/i18n';
 import { Drawer, useStyles2, Text } from '@grafana/ui';
-import { DEFAULT_FEED_URL } from 'app/plugins/panel/news/constants';
+// import { DEFAULT_FEED_URL } from 'app/plugins/panel/news/constants';
 import grotNewsSvg from 'img/grot-news.svg';
 
-import { NewsWrapper } from './NewsWrapper';
+// import { NewsWrapper } from './NewsWrapper';
 
 interface NewsContainerProps {
   className?: string;
@@ -35,7 +35,10 @@ export function NewsContainer({ onClose }: NewsContainerProps) {
       onClose={onClose}
       size="md"
     >
-      <NewsWrapper feedUrl={DEFAULT_FEED_URL} />
+      <div>
+        <h1></h1>
+      </div>
+      {/* <NewsWrapper feedUrl={DEFAULT_FEED_URL} /> */}
     </Drawer>
   );
 }

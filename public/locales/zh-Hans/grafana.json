@@ -10324,7 +10324,7 @@
       "title": "导入仪表板"
     },
     "dashboards": {
-      "subtitle": "创建并管理仪表板，以将您的数据可视化",
+      "subtitle": "数据可视化仪表板",
       "title": "仪表板"
     },
     "data-sources": {
@@ -10842,7 +10842,7 @@
       "explore": "探索",
       "get-help": "获得帮助",
       "hide-legend": "隐藏图例",
-      "inspect": "检查",
+      "inspect": "查看",
       "inspect-data": "数据",
       "inspect-json": "面板 JSON",
       "more": "更多...",
@@ -13150,9 +13150,9 @@
       "apply-button": "应用时间范围",
       "default-error": "请输入过去的日期或“{{now}}”",
       "fiscal-year": "财政年度：{{from}} - {{to}}",
-      "from-input": "来自",
+      "from-input": "开始",
       "open-input-calendar": "打开日历",
-      "range-error": "“发件人”不能在“收件人”之后",
+      "range-error": "“开始”不能在“结束”之后",
       "to-input": "结束"
     },
     "range-picker": {

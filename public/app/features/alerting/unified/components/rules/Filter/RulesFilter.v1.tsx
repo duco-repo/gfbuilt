@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { ContactPointSelector } from '@grafana/alerting/unstable';
-import { DataSourceInstanceSettings, GrafanaTheme2, SelectableValue } from '@grafana/data';
+import { DataSourceInstanceSettings, GrafanaTheme2, SelectableValue, OrgRole } from '@grafana/data';
 import { Trans, t } from '@grafana/i18n';
 import { Button, Field, Icon, Input, Label, RadioButtonGroup, Stack, Tooltip, useStyles2 } from '@grafana/ui';
 import { DashboardPicker } from 'app/core/components/Select/DashboardPicker';
@@ -46,6 +46,8 @@ const RulesFilter = ({ onClear = () => undefined, viewMode, onViewModeChange }: 
   const styles = useStyles2(getStyles);
   const { pluginsFilterEnabled } = usePluginsFilterStatus();
   const { filterState, hasActiveFilters, searchQuery, setSearchQuery, updateFilters } = useRulesFilter();
+
+  const isViewerRole = contextSrv.user.orgRole === OrgRole.Viewer;
 
   // This key is used to force a rerender on the inputs when the filters are cleared
   const [filterKey, setFilterKey] = useState<number>(Math.floor(Math.random() * 100));
@@ -113,6 +115,7 @@ const RulesFilter = ({ onClear = () => undefined, viewMode, onViewModeChange }: 
   return (
     <Stack direction="column" gap={0}>
       <Stack direction="row" gap={1} wrap="wrap">
+      {!isViewerRole && (
         <Field
           className={styles.dsPickerContainer}
           label={
@@ -163,7 +166,8 @@ const RulesFilter = ({ onClear = () => undefined, viewMode, onViewModeChange }: 
             onClear={clearDataSource}
           />
         </Field>
-
+      )}
+      {!isViewerRole && (
         <Field
           className={styles.dashboardPickerContainer}
           label={
@@ -183,6 +187,7 @@ const RulesFilter = ({ onClear = () => undefined, viewMode, onViewModeChange }: 
             cacheOptions
           />
         </Field>
+        )}
 
         <div>
           <Label>

@@ -16,7 +16,7 @@ export function BouncingLoader() {
       aria-label={t('bouncing-loader.label', 'Loading')}
     >
       <div className={styles.bounce}>
-        <img alt="" src={grafanaIconSvg} className={styles.logo} />
+      <img alt="" src="public/img/entry_icon.svg" className={styles.logo} />
       </div>
     </div>
   );
@@ -44,39 +44,7 @@ const pulse = keyframes({
   },
 });
 
-const bounce = keyframes({
-  'from, to': {
-    transform: 'translateY(0px)',
-    animationTimingFunction: 'cubic-bezier(0.3, 0, 0.1, 1)',
-  },
-  '50%': {
-    transform: 'translateY(-50px)',
-    animationTimingFunction: 'cubic-bezier(0.9, 0, 0.7, 1)',
-  },
-});
 
-const squash = keyframes({
-  '0%': {
-    transform: 'scaleX(1.3) scaleY(0.8)',
-    animationTimingFunction: 'cubic-bezier(0.3, 0, 0.1, 1)',
-  },
-  '15%': {
-    transform: 'scaleX(0.75) scaleY(1.25)',
-    animationTimingFunction: 'cubic-bezier(0, 0, 0.7, 0.75)',
-  },
-  '55%': {
-    transform: 'scaleX(1.05) scaleY(0.95)',
-    animationTimingFunction: 'cubic-bezier(0.9, 0, 1, 1)',
-  },
-  '95%': {
-    transform: 'scaleX(0.75) scaleY(1.25)',
-    animationTimingFunction: 'cubic-bezier(0, 0, 0, 1)',
-  },
-  '100%': {
-    transform: 'scaleX(1.3) scaleY(0.8)',
-    animationTimingFunction: 'cubic-bezier(0, 0, 0.7, 1)',
-  },
-});
 
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
@@ -97,22 +65,12 @@ const getStyles = (theme: GrafanaTheme2) => ({
   }),
 
   bounce: css({
-    textAlign: 'center',
-    [theme.transitions.handleMotion('no-preference')]: {
-      animationName: bounce,
-      animationDuration: '0.9s',
-      animationIterationCount: 'infinite',
-    },
+    textAlign: 'center',  
   }),
 
   logo: css({
     display: 'inline-block',
-    [theme.transitions.handleMotion('no-preference')]: {
-      animationName: squash,
-      animationDuration: '0.9s',
-      animationIterationCount: 'infinite',
-    },
-    width: '60px',
-    height: '60px',
+    width: '48px',
+    height: '48px',
   }),
 });

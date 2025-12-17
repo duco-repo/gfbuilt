@@ -1,7 +1,7 @@
 import { css, cx } from '@emotion/css';
 import React, { CSSProperties, useEffect } from 'react';
 
-import { GrafanaTheme2 } from '@grafana/data';
+import { GrafanaTheme2, OrgRole } from '@grafana/data';
 import { selectors } from '@grafana/e2e-selectors';
 import { config, useChromeHeaderHeight } from '@grafana/runtime';
 import { useSceneObjectState } from '@grafana/scenes';
@@ -14,6 +14,7 @@ import { NavToolbarActions } from '../scene/NavToolbarActions';
 
 import { DashboardEditPaneRenderer } from './DashboardEditPaneRenderer';
 import { useEditPaneCollapsed } from './shared';
+import { contextSrv } from 'app/core/services/context_srv';
 
 interface Props {
   dashboard: DashboardScene;
@@ -23,7 +24,9 @@ interface Props {
 }
 
 export function DashboardEditPaneSplitter({ dashboard, isEditing, body, controls }: Props) {
-  const headerHeight = useChromeHeaderHeight();
+  const isViewerRole = contextSrv.user.orgRole === OrgRole.Viewer;
+
+  const headerHeight = isViewerRole ? 0 : useChromeHeaderHeight();
   const { editPane } = dashboard.state;
   const styles = useStyles2(getStyles, headerHeight ?? 0);
   const [isCollapsed, setIsCollapsed] = useEditPaneCollapsed();

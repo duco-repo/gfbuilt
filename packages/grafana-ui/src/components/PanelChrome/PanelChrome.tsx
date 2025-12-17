@@ -174,6 +174,8 @@ export function PanelChrome({
     collapsed = !isOpen;
   }
 
+  const isInIframe = window?.parent !== window;
+
   // hover menu is only shown on hover when not on touch devices
   const showOnHoverClass = showMenuAlways ? 'always-show' : 'show-on-hover';
   const isPanelTransparent = displayMode === 'transparent';
@@ -407,7 +409,7 @@ export function PanelChrome({
               menu={menu}
               title={typeof title === 'string' ? title : undefined}
               placement="bottom-end"
-              menuButtonClass={cx(styles.menuItem, dragClassCancel, showOnHoverClass)}
+               menuButtonClass={cx(styles.menuItem, dragClassCancel, showOnHoverClass, isInIframe && styles.shapedMenu)}
               onOpenMenu={onOpenMenu}
             />
           )}
@@ -502,7 +504,9 @@ const getStyles = (theme: GrafanaTheme2) => {
         opacity: '0',
         visibility: 'hidden',
       },
-
+      '.shaped-lb': {
+        borderRadius: '0 4px 0 12px',
+      },
       '&:focus-visible, &:hover': {
         // only show menu icon on hover or focused panel
         '.show-on-hover': {
@@ -555,6 +559,9 @@ const getStyles = (theme: GrafanaTheme2) => {
     }),
     pointer: css({
       cursor: 'pointer',
+    }),
+    shapedMenu: css({
+      borderRadius: '0 0 0 12px !important',
     }),
     streaming: css({
       label: 'panel-streaming',

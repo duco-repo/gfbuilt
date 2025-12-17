@@ -1,6 +1,6 @@
 import { css, cx } from '@emotion/css';
 import { memo, useMemo, useState } from 'react';
-
+import { useWindowSize } from 'react-use'
 import { GrafanaTheme2, isDateTime, rangeUtil, RawTimeRange, TimeOption, TimeRange, TimeZone } from '@grafana/data';
 import { selectors } from '@grafana/e2e-selectors';
 import { t, Trans } from '@grafana/i18n';
@@ -9,7 +9,7 @@ import { useStyles2, useTheme2 } from '../../../themes/ThemeContext';
 import { getFocusStyles } from '../../../themes/mixins';
 import { FilterInput } from '../../FilterInput/FilterInput';
 import { Icon } from '../../Icon/Icon';
-import { TextLink } from '../../Link/TextLink';
+// import { TextLink } from '../../Link/TextLink';
 import { WeekStart } from '../WeekStartPicker';
 
 import { TimePickerFooter } from './TimePickerFooter';
@@ -66,7 +66,18 @@ export const TimePickerContentWithScreenSize = (props: PropsWithScreenSize) => {
   const isHistoryEmpty = !history?.length;
   const isContainerTall =
     (isFullscreen && showHistory) || (!isFullscreen && ((showHistory && !isHistoryEmpty) || !hideQuickRanges));
-  const styles = useStyles2(getStyles, isReversed, hideQuickRanges, isContainerTall, isFullscreen);
+    const windowSize = useWindowSize();
+
+    const styles = useStyles2((theme) =>
+      getStyles(
+        theme,
+        isReversed,
+        hideQuickRanges,
+        isContainerTall,
+        isFullscreen,
+        windowSize.width
+      )
+    );
   const historyOptions = mapToHistoryOptions(history, timeZone);
   const timeOption = useTimeOption(value.raw, quickOptions);
   const [searchTerm, setSearchQuery] = useState('');
@@ -119,13 +130,14 @@ export const TimePickerContentWithScreenSize = (props: PropsWithScreenSize) => {
 export const TimePickerContent = (props: Props) => {
   const { widthOverride } = props;
   const theme = useTheme2();
-  const isFullscreen = (widthOverride || window.innerWidth) >= theme.breakpoints.values.lg;
+  const windowSize = useWindowSize();
+  const isFullscreen = (widthOverride || windowSize.width) >= theme.breakpoints.values.lg;
   return <TimePickerContentWithScreenSize {...props} isFullscreen={isFullscreen} />;
 };
 
 const NarrowScreenForm = (props: FormProps) => {
   const { value, hideQuickRanges, onChange, timeZone, historyOptions = [], showHistory, onError, weekStart } = props;
-  const styles = useStyles2(getNarrowScreenStyles);
+  const styles = useStyles2((theme) => getNarrowScreenStyles(theme));
   const isAbsolute = isDateTime(value.raw.from) || isDateTime(value.raw.to);
   const [collapsedFlag, setCollapsedFlag] = useState(!isAbsolute);
   const collapsed = hideQuickRanges ? false : collapsedFlag;
@@ -183,7 +195,7 @@ const NarrowScreenForm = (props: FormProps) => {
 
 const FullScreenForm = (props: FormProps) => {
   const { onChange, value, timeZone, fiscalYearStartMonth, isReversed, historyOptions, onError, weekStart } = props;
-  const styles = useStyles2(getFullScreenStyles, props.hideQuickRanges);
+  const styles = useStyles2((theme) => getFullScreenStyles(theme, props.hideQuickRanges));
   const onChangeTimeOption = (timeOption: TimeOption) => {
     return onChange(mapOptionToTimeRange(timeOption, timeZone));
   };
@@ -222,26 +234,10 @@ const FullScreenForm = (props: FormProps) => {
 };
 
 const EmptyRecentList = memo(() => {
-  const styles = useStyles2(getEmptyListStyles);
-  const emptyRecentListText = t(
-    'time-picker.content.empty-recent-list-info',
-    "It looks like you haven't used this time picker before. As soon as you enter some time intervals, recently used intervals will appear here."
-  );
+  
 
   return (
-    <div className={styles.container}>
-      <div>
-        <span>{emptyRecentListText}</span>
-      </div>
-      <Trans i18nKey="time-picker.content.empty-recent-list-docs">
-        <div>
-          <TextLink href="https://grafana.com/docs/grafana/latest/dashboards/time-range-controls" external>
-            Read the documentation
-          </TextLink>
-          <span> to find out more about how to enter custom time ranges.</span>
-        </div>
-      </Trans>
-    </div>
+    <div></div>
   );
 });
 
@@ -271,7 +267,8 @@ const getStyles = (
   isReversed?: boolean,
   hideQuickRanges?: boolean,
   isContainerTall?: boolean,
-  isFullscreen?: boolean
+  isFullscreen?: boolean,
+  windowWidth?: number
 ) => ({
   container: css({
     background: theme.colors.background.elevated,
@@ -286,7 +283,7 @@ const getStyles = (
   body: css({
     display: 'flex',
     flexDirection: 'row-reverse',
-    height: `${isContainerTall ? '381px' : '217px'}`,
+    height: `${windowWidth && windowWidth > theme.breakpoints.values.lg ? '351px' : isContainerTall ? '381px' : '217px'}`,
     maxHeight: '100vh',
   }),
   leftSide: css({
@@ -356,16 +353,5 @@ const getFullScreenStyles = (theme: GrafanaTheme2, hideQuickRanges?: boolean) =>
     flexDirection: 'column',
     justifyContent: 'flex-end',
     paddingTop: theme.spacing(1),
-  }),
-});
-
-const getEmptyListStyles = (theme: GrafanaTheme2) => ({
-  container: css({
-    padding: '12px',
-    margin: '12px',
-
-    'a, span': {
-      fontSize: '13px',
-    },
   }),
 });

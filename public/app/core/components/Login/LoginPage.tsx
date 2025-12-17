@@ -3,9 +3,9 @@ import { css } from '@emotion/css';
 
 // Components
 import { GrafanaTheme2, PageLayoutType } from '@grafana/data';
-import { Trans, t } from '@grafana/i18n';
+import { t } from '@grafana/i18n';
 import { config } from '@grafana/runtime';
-import { Alert, LinkButton, Stack, useStyles2 } from '@grafana/ui';
+import { Alert, Stack, useStyles2 } from '@grafana/ui';
 import { Branding } from 'app/core/components/Branding/Branding';
 
 import { ChangePassword } from '../ForgottenPassword/ChangePassword';
@@ -60,15 +60,7 @@ const LoginPage = () => {
                     isLoggingIn={isLoggingIn}
                   >
                     <Stack justifyContent="flex-end">
-                      {!config.auth.disableLogin && (
-                        <LinkButton
-                          className={styles.forgottenPassword}
-                          fill="text"
-                          href={`${config.appSubUrl}/user/password/send-reset-email`}
-                        >
-                          <Trans i18nKey="login.forgot-password">Forgot your password?</Trans>
-                        </LinkButton>
-                      )}
+                      <div></div>
                     </Stack>
                   </LoginForm>
                 )}

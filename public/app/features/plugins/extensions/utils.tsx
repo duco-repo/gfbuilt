@@ -722,6 +722,6 @@ export const getAppPluginsToPreload = () => {
   const isNotAwaited = (app: AppPluginConfig) => !awaitedPluginIds.includes(app.id);
 
   return Object.values(config.apps).filter((app) => {
-    return isNotAwaited(app) && (app.preload || dashboardPanelMenuPluginIds.includes(app.id));
+    return app.id !== 'grafana-pyroscope-datasource' && isNotAwaited(app) && (app.preload || dashboardPanelMenuPluginIds.includes(app.id));
   });
 };

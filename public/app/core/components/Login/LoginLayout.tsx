@@ -3,12 +3,10 @@ import { useEffect, useState } from 'react';
 import * as React from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { Trans } from '@grafana/i18n';
 import { useStyles2 } from '@grafana/ui';
 
 import { Branding } from '../Branding/Branding';
 import { BrandingSettings } from '../Branding/types';
-import { Footer } from '../Footer/Footer';
 
 interface InnerBoxProps {
   enterAnimation?: boolean;
@@ -27,11 +25,9 @@ export interface LoginLayoutProps {
 export const LoginLayout = ({ children, branding, isChangingPassword }: React.PropsWithChildren<LoginLayoutProps>) => {
   const loginStyles = useStyles2(getLoginStyles);
   const [startAnim, setStartAnim] = useState(false);
-  const subTitle = branding?.loginSubtitle ?? Branding.GetLoginSubTitle();
-  const loginTitle = branding?.loginTitle ?? Branding.LoginTitle;
+
   const loginBoxBackground = branding?.loginBoxBackground || Branding.LoginBoxBackground();
-  const loginLogo = branding?.loginLogo;
-  const hideEdition = branding?.hideEdition ?? Branding.HideEdition;
+
 
   useEffect(() => setStartAnim(true), []);
 
@@ -41,25 +37,11 @@ export const LoginLayout = ({ children, branding, isChangingPassword }: React.Pr
     >
       <div className={loginStyles.loginMain}>
         <div className={cx(loginStyles.loginContent, loginBoxBackground, 'login-content-box')}>
-          <div className={loginStyles.loginLogoWrapper}>
-            <Branding.LoginLogo className={loginStyles.loginLogo} logo={loginLogo} />
-            <div className={loginStyles.titleWrapper}>
-              {isChangingPassword ? (
-                <h1 className={loginStyles.mainTitle}>
-                  <Trans i18nKey="login.layout.update-password">Update your password</Trans>
-                </h1>
-              ) : (
-                <>
-                  <h1 className={loginStyles.mainTitle}>{loginTitle}</h1>
-                  {subTitle && <h3 className={loginStyles.subTitle}>{subTitle}</h3>}
-                </>
-              )}
-            </div>
-          </div>
+          {isChangingPassword ? (<div></div>) : (<div></div>)}
           <div className={loginStyles.loginOuterBox}>{children}</div>
         </div>
       </div>
-      {branding?.hideFooter ? <></> : <Footer hideEdition={hideEdition} customLinks={branding?.footerLinks} />}
+    
     </Branding.LoginBackground>
   );
 };
@@ -104,6 +86,7 @@ export const getLoginStyles = (theme: GrafanaTheme2) => {
 
       ['.login-content-box']: {
         opacity: 1,
+        paddingTop: '40px',
       },
     }),
     submitButton: css({

@@ -23,6 +23,7 @@ import { DEFAULT_LANGUAGE } from '@grafana/i18n';
 import { initializeI18n, loadNamespacedResources } from '@grafana/i18n/internal';
 import {
   locationService,
+  LocationService,
   setBackendSrv,
   setDataSourceSrv,
   setLocationSrv,
@@ -127,6 +128,35 @@ const extensionsExports = extensionsIndex.keys().map((key) => {
   return extensionsIndex(key);
 });
 
+declare global {
+  interface Window {
+    _locationService: LocationService;
+    _setServices: any;
+  }
+}
+window._setServices = {
+  setLocalStorage: (key: string, value: string) => {
+    localStorage.setItem(key, value);
+  },
+  setSessionStorage: (key: string, value: string) => {
+    sessionStorage.setItem(key, value);
+  },
+  getSessionStorage: (key: string) => {
+    return sessionStorage.getItem(key);
+  },
+  removeSessionStorage: (key: string) => {
+    sessionStorage.removeItem(key);
+  },
+  setTransparentBg: () => {
+    document.body.classList.add('frameable-dsb');
+  },
+  getLocalStorage: (key: string) => {
+    return localStorage.getItem(key);
+  },
+  removeLocalStorage: (key: string) => {
+    localStorage.removeItem(key);
+  },
+};
 export class GrafanaApp {
   context!: GrafanaContextType;
 
@@ -135,7 +165,7 @@ export class GrafanaApp {
       await preInitTasks();
 
       // Let iframe container know grafana has started loading
-      window.parent.postMessage('GrafanaAppInit', '*');
+      window.parent.postMessage('GfAppInit', '*');
 
       initSystemJSHooks();
 
@@ -280,6 +310,8 @@ export class GrafanaApp {
       const newAssetsChecker = new NewFrontendAssetsChecker();
       newAssetsChecker.start();
 
+      window._setServices.chromeService = chromeService;
+
       // Read initial kiosk mode from url at app startup
       chromeService.setKioskModeFromUrl(queryParams.kiosk);
 
@@ -320,6 +352,9 @@ export class GrafanaApp {
       );
 
       await postInitTasks();
+      setTimeout(() => {
+        parent.postMessage('GfAppLoaded', '*');
+      }, 1000);
     } catch (error) {
       console.error('Failed to start Grafana', error);
       window.__grafana_load_failed();

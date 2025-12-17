@@ -600,7 +600,7 @@ export class DashboardScenePageStateManager extends DashboardScenePageStateManag
             ...locationService.getLocation(),
             pathname: dashboardUrl,
           });
-          console.log('not correct url correcting', dashboardUrl, currentPath);
+          // console.log('not correct url correcting', dashboardUrl, currentPath);
         }
       }
 

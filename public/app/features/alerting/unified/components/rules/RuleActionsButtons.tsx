@@ -9,6 +9,7 @@ import { INSTANCES_DISPLAY_LIMIT } from 'app/features/alerting/unified/component
 import SilenceGrafanaRuleDrawer from 'app/features/alerting/unified/components/silences/SilenceGrafanaRuleDrawer';
 import { useRulesFilter } from 'app/features/alerting/unified/hooks/useFilteredRules';
 import { useDispatch } from 'app/types/store';
+import { OrgRole } from '@grafana/data';
 import { CombinedRule, RuleIdentifier, RulesSource } from 'app/types/unified-alerting';
 
 import { AlertRuleAction, useAlertRuleAbility } from '../../hooks/useAbilities';
@@ -22,6 +23,7 @@ import { createRelativeUrl } from '../../utils/url';
 import { EnrichmentDrawerExtension } from '../rule-list/extensions/EnrichmentDrawerExtension';
 
 import { RedirectToCloneRule } from './CloneRule';
+import { contextSrv } from 'app/core/services/context_srv';
 
 export const matchesWidth = (width: number) => window.matchMedia(`(max-width: ${width}px)`).matches;
 
@@ -68,6 +70,8 @@ export const RuleActionsButtons = ({ compact, showViewButton, rule, rulesSource 
 
   const identifier = ruleId.fromCombinedRule(sourceName, rule);
   const groupId = groupIdentifier.fromCombinedRule(rule);
+
+  const isViewerRole = contextSrv.user.orgRole === OrgRole.Viewer;
 
   if (showViewButton) {
     buttons.push(
@@ -116,31 +120,32 @@ export const RuleActionsButtons = ({ compact, showViewButton, rule, rulesSource 
   return (
     <Stack gap={1} alignItems="center" wrap="nowrap">
       {buttons}
-      <AlertRuleMenu
-        rulerRule={rule.rulerRule}
-        promRule={rule.promRule}
-        identifier={identifier}
-        groupIdentifier={groupId}
-        handleDelete={() => {
-          if (rule.rulerRule) {
-            const editableRuleIdentifier = ruleId.fromRulerRuleAndGroupIdentifierV2(groupId, rule.rulerRule);
-            showDeleteModal(editableRuleIdentifier, groupId);
-          }
-        }}
-        handleSilence={() => setShowSilenceDrawer(true)}
-        handleManageEnrichments={() => setShowEnrichmentDrawer(true)}
-        handleDuplicateRule={() => setRedirectToClone({ identifier, isProvisioned })}
-        onPauseChange={() => {
-          // Uses INSTANCES_DISPLAY_LIMIT + 1 here as exporting LIMIT_ALERTS from RuleList has the side effect
-          // of breaking some unrelated tests in Policy.test.tsx due to mocking approach
-          const limitAlerts = hasActiveFilters ? undefined : INSTANCES_DISPLAY_LIMIT + 1;
-          // Trigger a re-fetch of the rules table
-          // TODO: Migrate rules table functionality to RTK Query, so we instead rely
-          // on tag invalidation (or optimistic cache updates) for this
-          dispatch(fetchPromAndRulerRulesAction({ rulesSourceName: GRAFANA_RULES_SOURCE_NAME, limitAlerts }));
-        }}
-        buttonSize={buttonSize}
-      />
+      {!isViewerRole && (
+        <AlertRuleMenu
+          rulerRule={rule.rulerRule}
+          promRule={rule.promRule}
+          identifier={identifier}
+          groupIdentifier={groupId}
+          handleDelete={() => {
+            if (rule.rulerRule) {
+              const editableRuleIdentifier = ruleId.fromRulerRuleAndGroupIdentifierV2(groupId, rule.rulerRule);
+              showDeleteModal(editableRuleIdentifier, groupId);
+            }
+          }}
+          handleSilence={() => setShowSilenceDrawer(true)}
+          handleDuplicateRule={() => setRedirectToClone({ identifier, isProvisioned })}
+          onPauseChange={() => {
+            // Uses INSTANCES_DISPLAY_LIMIT + 1 here as exporting LIMIT_ALERTS from RuleList has the side effect
+            // of breaking some unrelated tests in Policy.test.tsx due to mocking approach
+            const limitAlerts = hasActiveFilters ? undefined : INSTANCES_DISPLAY_LIMIT + 1;
+            // Trigger a re-fetch of the rules table
+            // TODO: Migrate rules table functionality to RTK Query, so we instead rely
+            // on tag invalidation (or optimistic cache updates) for this
+            dispatch(fetchPromAndRulerRulesAction({ rulesSourceName: GRAFANA_RULES_SOURCE_NAME, limitAlerts }));
+          }}
+          buttonSize={buttonSize}
+        />
+      )}
       {deleteModal}
       {silenceableRule && showSilenceDrawer && (
         <SilenceGrafanaRuleDrawer ruleUid={ruleUid} onClose={() => setShowSilenceDrawer(false)} />

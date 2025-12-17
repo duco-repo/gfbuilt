@@ -22,6 +22,7 @@ export interface Logger {
 /** @internal */
 export const createLogger = (name: string): Logger => {
   let loggingEnabled = false;
+  const isDisabled = true;
 
   if (typeof window !== 'undefined') {
     loggingEnabled = window.localStorage.getItem('grafana.debug') === 'true';
@@ -29,7 +30,7 @@ export const createLogger = (name: string): Logger => {
 
   return {
     logger: (id: string, throttle = false, ...t: Args) => {
-      if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test' || !loggingEnabled) {
+      if (isDisabled) {
         return;
       }
       const fn = throttle ? throttledLog : console.log;

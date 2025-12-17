@@ -13,6 +13,8 @@
     "isolatedModules": true,
     "moduleResolution": "bundler",
     "tsBuildInfoFile": "./tsconfig.tsbuildinfo",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "paths": {
       "@grafana/schema/dist/esm/*": ["../packages/grafana-schema/src/*"]
     }

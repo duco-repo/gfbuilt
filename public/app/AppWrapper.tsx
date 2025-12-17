@@ -60,10 +60,10 @@ export class AppWrapper extends Component<AppWrapperProps, AppWrapperState> {
     $('.preloader').remove();
 
     // clear any old icon caches
-    const cacheKeys = (await window.caches?.keys()) ?? [];
+    const cacheKeys = (await window.caches?.keys()) || [];
     for (const key of cacheKeys) {
       if (key.startsWith('grafana-icon-cache') && key !== this.iconCacheID) {
-        window.caches.delete(key);
+        window.caches?.delete(key);
       }
     }
   }

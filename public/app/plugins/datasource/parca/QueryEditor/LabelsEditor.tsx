@@ -138,7 +138,7 @@ const getStyles = (theme: GrafanaTheme2) => {
     wrapper: css({
       display: 'flex',
       flex: 1,
-      border: '1px solid rgba(36, 41, 46, 0.3)',
+      border: '1px solid rgba(34, 41, 57, 0.3)',
       borderRadius: theme.shape.radius.default,
     }),
   };

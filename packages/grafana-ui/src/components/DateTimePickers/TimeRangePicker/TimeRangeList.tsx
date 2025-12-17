@@ -94,5 +94,24 @@ const getStyles = () => ({
 const getOptionsStyles = (theme: GrafanaTheme2) => ({
   list: css({
     padding: theme.spacing(0.5),
+    maxHeight: '300px',
+    overflowY: 'auto',
+    
+    // Custom scrollbar styling
+    '&::-webkit-scrollbar': {
+      width: '6px',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: theme.colors.background.secondary,
+      borderRadius: '10px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: 'rgba(166, 180, 206, 0.5)',
+      borderRadius: '10px'
+    },
+    
+    // Firefox scrollbar styling
+    scrollbarWidth: 'thin',
+    scrollbarColor: `rgba(166, 180, 206, 0.5) ${theme.colors.background.secondary}`,
   }),
 });

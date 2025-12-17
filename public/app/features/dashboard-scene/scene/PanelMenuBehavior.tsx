@@ -2,6 +2,7 @@ import {
   getTimeZone,
   InterpolateFunction,
   LinkModel,
+  OrgRole,
   locationUtil,
   PanelMenuItem,
   PanelPlugin,
@@ -65,6 +66,7 @@ const METRICS_DRILLDOWN_CATEGORY = 'metrics-drilldown';
  */
 export function panelMenuBehavior(menu: VizPanelMenu) {
   const asyncFunc = async () => {
+    const isViewerRole = contextSrv.user.orgRole === OrgRole.Viewer;
     // hm.. add another generic param to SceneObject to specify parent type?
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const panel = menu.parent as VizPanel;
@@ -78,9 +80,11 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
     const isReadOnlyRepeat = isRepeatCloneOrChildOf(panel);
 
     // For embedded dashboards we only have explore action for now
-    if (isEmbedded) {
+    if (isEmbedded && !isViewerRole) {
       if (exploreMenuItem) {
         menu.setState({ items: [exploreMenuItem] });
+      } else {
+        menu.setState({ items: [] });
       }
       return;
     }
@@ -98,6 +102,22 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
       });
     }
 
+    if (isViewerRole) {
+      items.push({
+        text: t('panel.header-menu.inspect-data', `Data`),
+        //href: getInspectUrl(panel, InspectTab.Data), deprecated in 12.3
+        href: locationUtil.getUrlForPartial(locationService.getLocation(), {
+          inspect: panel.state.key,
+          inspectTab: InspectTab.Data,
+        }),
+        iconClassName: 'file-alt',
+        onClick: (e) => {
+          e.preventDefault();
+          locationService.partial({ inspect: panel.state.key, inspectTab: InspectTab.Data });
+        },
+      });
+    }
+    
     if (dashboard.canEditDashboard() && dashboard.state.editable && !isReadOnlyRepeat && !isEditingPanel) {
       // We could check isEditing here but I kind of think this should always be in the menu,
       // and going into panel edit should make the dashboard go into edit mode is it's not already
@@ -109,6 +129,7 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
       });
     }
 
+    if (config.featureToggles && !isViewerRole) {
     const subMenu: PanelMenuItem[] = [];
     subMenu.push({
       text: t('share-panel.menu.share-link-title', 'Share link'),
@@ -181,6 +202,27 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
         e.preventDefault();
       },
     });
+  } else if (!isViewerRole) {
+    items.push({
+      text: t('panel.header-menu.share', 'Share'),
+      iconClassName: 'share-alt',
+      onClick: () => {
+        //dashboard.showModal(new ShareModal({ panelRef: panel.getRef() })); deprecated in 12.3
+        DashboardInteractions.sharingCategoryClicked({
+          item: shareDashboardType.link,
+          shareResource: getTrackingSource(panel.getRef()),
+        });
+
+        const drawer = new ShareDrawer({
+          shareView: shareDashboardType.link,
+          panelRef: panel.getRef(),
+        });
+
+        dashboard.showModal(drawer);
+      },
+      shortcut: 'p s',
+    });
+  }
 
     if (dashboard.state.isEditing && !isReadOnlyRepeat && !isEditingPanel) {
       moreSubMenu.push({
@@ -193,7 +235,7 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
       });
     }
 
-    if (!isEditingPanel) {
+    if (!isEditingPanel && !isViewerRole) {
       moreSubMenu.push({
         text: t('panel.header-menu.copy', `Copy`),
         iconClassName: 'copy',
@@ -203,7 +245,7 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
       });
     }
 
-    if (dashboard.state.isEditing && !isReadOnlyRepeat && !isEditingPanel) {
+    if (dashboard.state.isEditing && !isReadOnlyRepeat && !isEditingPanel && !isViewerRole) {
       if (isLibraryPanel(panel)) {
         moreSubMenu.push({
           text: t('panel.header-menu.unlink-library-panel', `Unlink library panel`),
@@ -225,6 +267,7 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
           },
         });
       } else {
+        if (config.featureToggles && !isViewerRole) {
         moreSubMenu.push({
           text: t('share-panel.menu.new-library-panel-title', 'New library panel'),
           iconClassName: 'plus-square',
@@ -237,7 +280,25 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
             dashboard.showModal(drawer);
           },
         });
-      }
+       } else {
+        moreSubMenu.push({
+          text: t('panel.header-menu.create-library-panel', `Create library panel`),
+          onClick: () => {
+            DashboardInteractions.sharingCategoryClicked({
+              item: shareDashboardType.libraryPanel,
+              shareResource: getTrackingSource(panel.getRef()),
+            });
+
+            const drawer = new ShareDrawer({
+              shareView: shareDashboardType.libraryPanel,
+              panelRef: panel.getRef(),
+            });
+
+            dashboard.showModal(drawer);
+          },
+        });
+       }
+      } 
     }
 
     const isCreateAlertMenuOptionAvailable = getCreateAlertInMenuAvailability();
@@ -250,7 +311,7 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
       });
     }
 
-    if (hasLegendOptions(panel.state.options) && !isEditingPanel) {
+    if (hasLegendOptions(panel.state.options) && !isEditingPanel && !isViewerRole) {
       moreSubMenu.push({
         text: panel.state.options.legend.showLegend
           ? t('panel.header-menu.hide-legend', 'Hide legend')
@@ -264,7 +325,7 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
       });
     }
 
-    if (dashboard.canEditDashboard() && plugin && !plugin.meta.skipDataQuery && !isReadOnlyRepeat) {
+    if (dashboard.canEditDashboard() && plugin && !plugin.meta.skipDataQuery && !isReadOnlyRepeat && !isViewerRole) {
       moreSubMenu.push({
         text: t('panel.header-menu.get-help', 'Get help'),
         iconClassName: 'question-circle',
@@ -275,11 +336,13 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
       });
     }
 
-    if (exploreMenuItem) {
+    if (exploreMenuItem && !isViewerRole) {
       items.push(exploreMenuItem);
     }
 
-    items.push(getInspectMenuItem(plugin, panel, dashboard));
+    if (!isViewerRole) {
+      items.push(getInspectMenuItem(plugin, panel, dashboard));
+    }
 
     if (config.featureToggles.panelTimeSettings) {
       items.push({
@@ -327,7 +390,7 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
       }
 
       // Add generic "Extensions" menu for other links
-      if (otherLinks.length > 0) {
+      if (extensions.length > 0 && !dashboard.state.isEditing && !isViewerRole) {
         items.push({
           text: t('dashboard-scene.panel-menu-behavior.async-func.text.extensions', 'Extensions'),
           iconClassName: 'plug',
@@ -337,7 +400,7 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
       }
     }
 
-    if (moreSubMenu.length) {
+    if (moreSubMenu.length && !isViewerRole) {
       items.push({
         type: 'submenu',
         text: t('panel.header-menu.more', `More...`),
@@ -349,7 +412,7 @@ export function panelMenuBehavior(menu: VizPanelMenu) {
       });
     }
 
-    if (dashboard.state.isEditing && !isReadOnlyRepeat && !isEditingPanel) {
+    if (dashboard.state.isEditing && !isReadOnlyRepeat && !isEditingPanel && !isViewerRole) {
       items.push({
         text: '',
         type: 'divider',

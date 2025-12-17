@@ -16,7 +16,7 @@ $theme-name: light;
 
 // New Colors
 // -------------------------
-$blue-base: #3871dc;
+$blue-base: #6F68E8;
 $red-base: #e0226e;
 $green-base: #1b855e;
 
@@ -35,27 +35,27 @@ $gray-7: #fbfbfb;
 
 $white: #ffffff;
 
-$layer2: #f4f5f5;
+$layer2: #F3F5F9;
 
 // Accent colors
 // -------------------------
-$blue: #1f62e0;
+$blue: #8672ED;
 $red: $red-base;
 $yellow: #ecbb13;
 $purple: #9933cc;
 
 // Scaffolding
 // -------------------------
-$body-bg: #fbfbfb;
+$body-bg: #F3F5F9;
 
-$text-color: rgba(36, 41, 46, 1);
-$text-color-weak: rgba(36, 41, 46, 0.75);
+$text-color: rgba(34, 41, 57, 1);
+$text-color-weak: rgba(34, 41, 57, 0.75);
 $text-color-emphasis: #000000;
 
 // Links
 // -------------------------
-$link-color: rgba(36, 41, 46, 1);
-$link-color-disabled: rgba(36, 41, 46, 0.65);
+$link-color: rgba(34, 41, 57, 1);
+$link-color-disabled: rgba(34, 41, 57, 0.65);
 $link-hover-color: #000000;
 
 // Typography
@@ -67,19 +67,19 @@ $text-muted: $text-color-weak;
 $panel-bg: #ffffff;
 
 // Page header
-$page-header-bg: #fbfbfb;
+$page-header-bg: #F3F5F9;
 $page-header-shadow: inset 0px -3px 10px $gray-6;
-$page-header-border-color: #fbfbfb;
+$page-header-border-color: #F3F5F9;
 
 // Graphite Target Editor
-$tight-form-func-bg: #f4f5f5;
+$tight-form-func-bg: #F3F5F9;
 
 $code-tag-bg: $gray-6;
 $code-tag-border: $gray-4;
 
 // cards
-$card-background: #f4f5f5;
-$card-background-hover: #f4f5f5;
+$card-background: #F3F5F9;
+$card-background-hover: #F3F5F9;
 $card-shadow: none;
 
 // Lists
@@ -93,7 +93,7 @@ $scrollbarBackground2: $gray-4;
 
 // Tables
 // -------------------------
-$table-bg-accent: #f4f5f5;
+$table-bg-accent: #F3F5F9;
 
 // Buttons
 // -------------------------
@@ -108,15 +108,15 @@ $btn-drag-image: '../img/grab_light.svg';
 // -------------------------
 $input-bg: #ffffff;
 
-$input-color: rgba(36, 41, 46, 1);
-$input-border-color: rgba(36, 41, 46, 0.3);
+$input-color: rgba(34, 41, 57, 1);
+$input-border-color: rgba(34, 41, 57, 0.3);
 
 // Dropdowns
 // -------------------------
 $dropdownBackground: #ffffff;
-$dropdownBorder: rgba(36, 41, 46, 0.12);
-$dropdownDividerTop: rgba(36, 41, 46, 0.12);
-$dropdownDividerBottom: rgba(36, 41, 46, 0.12);
+$dropdownBorder: rgba(34, 41, 57, 0.12);
+$dropdownDividerTop: rgba(34, 41, 57, 0.12);
+$dropdownDividerBottom: rgba(34, 41, 57, 0.12);
 
 $dropdownLinkColor: $dark-2;
 $dropdownLinkColorHover: $link-color;
@@ -127,7 +127,7 @@ $dropdownLinkBackgroundHover: $gray-6;
 // Menu dropdowns
 // -------------------------
 $menu-dropdown-bg: #ffffff;
-$menu-dropdown-hover-bg: rgba(36, 41, 46, 0.12);
+$menu-dropdown-hover-bg: rgba(34, 41, 57, 0.12);
 $menu-dropdown-shadow: 0px 13px 20px 1px rgba(24, 26, 27, 0.18);
 
 // Form states and alerts
@@ -139,12 +139,12 @@ $alert-info-bg: #ff9900;
 
 // Tooltips and popovers
 $tooltipBackground: #ffffff;
-$tooltipColor: rgba(36, 41, 46, 1);
+$tooltipColor: rgba(34, 41, 57, 1);
 
 $popover-bg: #ffffff;
-$popover-color: rgba(36, 41, 46, 1);
-$popover-border-color: rgba(36, 41, 46, 0.12);
-$popover-header-bg: #f4f5f5;
+$popover-color: rgba(34, 41, 57, 1);
+$popover-border-color: rgba(34, 41, 57, 0.12);
+$popover-header-bg: #F3F5F9;
 $popover-shadow: 0px 13px 20px 1px rgba(24, 26, 27, 0.18);
 
 $graph-tooltip-bg: $gray-5;

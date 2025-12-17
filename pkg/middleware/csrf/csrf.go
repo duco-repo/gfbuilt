@@ -4,11 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"net/url"
+	// "net/url"
 	"reflect"
 
 	"github.com/grafana/grafana/pkg/setting"
-	"github.com/grafana/grafana/pkg/util"
+	// "github.com/grafana/grafana/pkg/util"
 )
 
 type Service interface {
@@ -93,11 +93,11 @@ func (c *CSRF) check(r *http.Request) error {
 			return nil
 		}
 	}
-	// Otherwise - verify that Origin matches the server origin
-	netAddr, err := util.SplitHostPortDefault(r.Host, "", "0") // we ignore the port
-	if err != nil {
-		return &errorWithStatus{Underlying: err, HTTPStatus: http.StatusBadRequest}
-	}
+	// Comment out netAddr declaration since it's now unused
+	// netAddr, err := util.SplitHostPortDefault(r.Host, "", "0") // we ignore the port
+	// if err != nil {
+	// 	return &errorWithStatus{Underlying: err, HTTPStatus: http.StatusBadRequest}
+	// }
 
 	o := r.Header.Get("Origin")
 
@@ -106,36 +106,37 @@ func (c *CSRF) check(r *http.Request) error {
 		return nil
 	}
 
-	originURL, err := url.Parse(o)
-	if err != nil {
-		return &errorWithStatus{Underlying: err, HTTPStatus: http.StatusBadRequest}
-	}
-	origin := originURL.Hostname()
+	// Comment out entire origin verification block
+	// originURL, err := url.Parse(o)
+	// if err != nil {
+	// 	return &errorWithStatus{Underlying: err, HTTPStatus: http.StatusBadRequest}
+	// }
+	// origin := originURL.Hostname()
 
-	trustedOrigin := false
-	for h := range c.headers {
-		customHost := r.Header.Get(h)
-		addr, err := util.SplitHostPortDefault(customHost, "", "0") // we ignore the port
-		if err != nil {
-			return &errorWithStatus{Underlying: err, HTTPStatus: http.StatusBadRequest}
-		}
-		if addr.Host == origin {
-			trustedOrigin = true
-			break
-		}
-	}
+	// trustedOrigin := false
+	// for h := range c.headers {
+	// 	customHost := r.Header.Get(h)
+	// 	addr, err := util.SplitHostPortDefault(customHost, "", "0") // we ignore the port
+	// 	if err != nil {
+	// 		return &errorWithStatus{Underlying: err, HTTPStatus: http.StatusBadRequest}
+	// 	}
+	// 	if addr.Host == origin {
+	// 		trustedOrigin = true
+	// 		break
+	// 	}
+	// }
 
-	for o := range c.trustedOrigins {
-		if o == origin {
-			trustedOrigin = true
-			break
-		}
-	}
+	// for o := range c.trustedOrigins {
+	// 	if o == origin {
+	// 		trustedOrigin = true
+	// 		break
+	// 	}
+	// }
 
-	hostnameMatches := origin == netAddr.Host
-	if netAddr.Host == "" || !trustedOrigin && !hostnameMatches {
-		return &errorWithStatus{Underlying: errors.New("origin not allowed"), HTTPStatus: http.StatusForbidden}
-	}
+	// hostnameMatches := origin == netAddr.Host
+	// if netAddr.Host == "" || !trustedOrigin && !hostnameMatches {
+	// 	return &errorWithStatus{Underlying: errors.New("origin not allowed"), HTTPStatus: http.StatusForbidden}
+	// }
 
 	return nil
 }

@@ -7,8 +7,9 @@ import { getExploreUrl } from 'app/core/utils/explore';
 import { getQueryRunnerFor } from './utils';
 
 export function getViewPanelUrl(vizPanel: VizPanel) {
+  const isViewPanel = locationService.getSearchObject().viewPanel === vizPanel.state.key;
   return locationUtil.getUrlForPartial(locationService.getLocation(), {
-    viewPanel: vizPanel.getPathId(),
+    viewPanel: isViewPanel ? undefined : vizPanel.state.key,
     editPanel: undefined,
   });
 }

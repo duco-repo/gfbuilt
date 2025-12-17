@@ -24,7 +24,7 @@ ARG JS_NODE_ENV=production
 ARG JS_YARN_INSTALL_FLAG=--immutable
 ARG JS_YARN_BUILD_FLAG=build
 
-ENV NODE_OPTIONS=--max_old_space_size=8000
+ENV NODE_OPTIONS=--max_old_space_size=16384
 
 WORKDIR /tmp/grafana
 

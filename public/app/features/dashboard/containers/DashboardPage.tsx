@@ -1,7 +1,7 @@
 import { css, cx } from '@emotion/css';
 import { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-
+import { contextSrv } from 'app/core/services/context_srv';
 import { NavModel, NavModelItem, TimeRange, PageLayoutType, locationUtil, GrafanaTheme2 } from '@grafana/data';
 import { selectors } from '@grafana/e2e-selectors';
 import { locationService } from '@grafana/runtime';
@@ -360,6 +360,9 @@ export class UnthemedDashboardPage extends PureComponent<Props, State> {
     const kioskMode = getKioskMode(this.props.queryParams);
     const styles = getStyles(theme);
 
+    const isSoloRender = locationService.getLocation().pathname.includes('/d-solo/') ||
+      (sessionStorage.getItem('isSoloEmbed') === 'Y')
+
     if (!dashboard || !pageNav || !sectionNav) {
       return <DashboardLoading initPhase={this.props.initPhase} />;
     }
@@ -367,7 +370,14 @@ export class UnthemedDashboardPage extends PureComponent<Props, State> {
     const inspectPanel = this.getInspectPanel();
     const showSubMenu = !editPanel && !kioskMode && !this.props.queryParams.editview && dashboard.isSubMenuVisible();
 
-    const showToolbar = kioskMode !== KioskMode.Full && !queryParams.editview && !initError;
+    // const showToolbar = kioskMode !== KioskMode.Full && !queryParams.editview && !initError;
+    const userOrgRole = contextSrv.user.orgRole;
+
+    const showToolbar =
+      kioskMode !== KioskMode.Full &&
+      !queryParams.editview &&
+      !initError &&
+      (userOrgRole === 'Admin' || userOrgRole === 'Editor');
 
     const pageClassName = cx({
       [styles.fullScreenPanel]: Boolean(viewPanel),
@@ -408,6 +418,7 @@ export class UnthemedDashboardPage extends PureComponent<Props, State> {
               isEditable={!!dashboard.meta.canEdit}
               viewPanel={viewPanel}
               editPanel={editPanel}
+              hidePanelMenus={isSoloRender}
             />
           )}
 

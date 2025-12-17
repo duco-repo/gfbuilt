@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import { useToggle } from 'react-use';
 
-import { GrafanaTheme2 } from '@grafana/data';
+import { GrafanaTheme2, OrgRole } from '@grafana/data';
 import { Trans, t } from '@grafana/i18n';
 import { config } from '@grafana/runtime';
 import { Button, LinkButton, LoadingPlaceholder, Pagination, Spinner, Stack, Text, useStyles2 } from '@grafana/ui';
@@ -24,6 +24,8 @@ import { GrafanaRulesExporter } from '../export/GrafanaRulesExporter';
 import { RulesGroup } from './RulesGroup';
 import { useCombinedGroupNamespace } from './useCombinedGroupNamespace';
 
+import { contextSrv } from 'app/core/services/context_srv';
+
 interface Props {
   namespaces: CombinedRuleNamespace[];
   expandAll: boolean;
@@ -32,6 +34,8 @@ interface Props {
 export const GrafanaRules = ({ namespaces, expandAll }: Props) => {
   const styles = useStyles2(getStyles);
   const [queryParams] = useQueryParams();
+
+  const isViewerRole = contextSrv.user.orgRole === OrgRole.Viewer;
 
   const { prom, ruler } = useUnifiedAlertingSelector((state) => ({
     prom: state.promRules[GRAFANA_RULES_SOURCE_NAME] || initialAsyncRequestState,
@@ -76,7 +80,7 @@ export const GrafanaRules = ({ namespaces, expandAll }: Props) => {
             <div />
           )}
           <Stack direction="row" alignItems="center" justifyContent="flex-end">
-            {hasGrafanaAlerts && canExportRules && (
+          {hasGrafanaAlerts && canExportRules && !isViewerRole && (
               <Button
                 aria-label={t(
                   'alerting.grafana-rules.export-all-grafana-rules-aria-label-export-all-grafana-rules',

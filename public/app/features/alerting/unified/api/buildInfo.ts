@@ -153,21 +153,22 @@ function getDataSourceConfig(amSourceName: string) {
 }
 
 export async function fetchPromBuildInfo(url: string): Promise<PromBuildInfoResponse | undefined> {
-  const response = await lastValueFrom(
-    getBackendSrv().fetch<PromBuildInfoResponse>({
-      url: `${url}/api/v1/status/buildinfo`,
-      showErrorAlert: false,
-      showSuccessAlert: false,
-    })
-  ).catch((e) => {
-    if ('status' in e && e.status === 404) {
-      return undefined; // Cortex does not support buildinfo endpoint, we return an empty response
-    }
+  // const response = await lastValueFrom(
+  //   getBackendSrv().fetch<PromBuildInfoResponse>({
+  //     url: `${url}/api/v1/status/buildinfo`,
+  //     showErrorAlert: false,
+  //     showSuccessAlert: false,
+  //   })
+  // ).catch((e) => {
+  //   if ('status' in e && e.status === 404) {
+  //     return undefined; // Cortex does not support buildinfo endpoint, we return an empty response
+  //   }
 
-    throw e;
-  });
+  //   throw e;
+  // });
 
-  return response?.data;
+  // return response?.data;
+  return undefined;
 }
 
 /**

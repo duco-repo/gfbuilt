@@ -1,5 +1,6 @@
-import { config, registerEchoBackend, setEchoSrv } from '@grafana/runtime';
+import { config, registerEchoBackend, setEchoSrv,locationService } from '@grafana/runtime';
 import { reportMetricPerformanceMark } from 'app/core/utils/metrics';
+import {setLocale,setWeekStart,} from '@grafana/data';
 
 import { contextSrv } from '../context_srv';
 
@@ -8,6 +9,14 @@ import { Echo } from './Echo';
 // Initialise EchoSrv backends, calls during frontend app startup
 export async function initEchoSrv() {
   setEchoSrv(new Echo({ debug: process.env.NODE_ENV === 'development' }));
+
+  window._locationService = locationService;
+  window._setServices.setLocale = setLocale;
+  window._setServices.setWeekStart = setWeekStart;
+
+  locationService.getLocationObservable().subscribe((location) => {
+    parent.postMessage('GfLocationChange', '*');
+  });
 
   window.addEventListener('load', (e) => {
     const loadMetricName = 'frontend_boot_load_time_seconds';

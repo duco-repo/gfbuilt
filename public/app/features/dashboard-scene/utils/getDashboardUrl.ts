@@ -5,7 +5,7 @@ export interface DashboardUrlOptions {
   uid?: string;
   slug?: string;
   subPath?: string;
-  updateQuery?: UrlQueryMap;
+  updateQuery?: UrlQueryMap & { __doken_?: string };
   /** Set to location.search to preserve current params */
   currentQueryParams: string;
   /** * Returns solo panel route instead */
@@ -52,6 +52,7 @@ export function getDashboardUrl(options: DashboardUrlOptions) {
       width: options.updateQuery?.width || 1000,
       height: options.updateQuery?.height || 500,
       tz: options.timeZone,
+      __doken_: sessionStorage.getItem('__doken_') || '',
     };
   }
 

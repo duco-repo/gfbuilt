@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-
+import { useWindowSize } from 'react-use';
 import { GrafanaTheme2, VariableHide } from '@grafana/data';
 import { selectors } from '@grafana/e2e-selectors';
 import {
@@ -149,11 +149,22 @@ function DashboardControlsRenderer({ model }: SceneComponentProps<DashboardContr
   } = model.useState();
   const dashboard = getDashboardSceneFor(model);
   const { links, editPanel } = dashboard.useState();
-  const styles = useStyles2(getStyles);
+
+
+  const withSideBtn = (() => {
+    try {
+      const storedValue = localStorage.getItem('with-side-controls-btn');
+      return storedValue === 'WITH_SIDE_CONTROLS';
+    } catch (error) {
+      return false;
+    }
+  })();
+
+  const styles = useStyles2((theme) => getStyles(theme, withSideBtn));
+
   const showDebugger = window.location.search.includes('scene-debugger');
 
   if (!model.hasControls()) {
-    // To still have spacing when no controls are rendered
 
     return <Box padding={1}>{renderHiddenVariables(dashboard)}</Box>;
   }
@@ -205,14 +216,17 @@ function renderHiddenVariables(dashboard: DashboardScene) {
   return null;
 }
 
-function getStyles(theme: GrafanaTheme2) {
+function getStyles(theme: GrafanaTheme2, withSideBtn: boolean) {
   return {
     controls: css({
       display: 'flex',
       alignItems: 'flex-start',
       flex: '100%',
       gap: theme.spacing(1),
-      padding: theme.spacing(2),
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
+      paddingLeft: withSideBtn ? theme.spacing(7) : theme.spacing(2),
+      paddingRight: theme.spacing(2),
       flexDirection: 'row',
       flexWrap: 'nowrap',
       position: 'relative',
@@ -225,7 +239,6 @@ function getStyles(theme: GrafanaTheme2) {
     }),
     controlsPanelEdit: css({
       flexWrap: 'wrap-reverse',
-      // In panel edit we do not need any right padding as the splitter is providing it
       paddingRight: 0,
     }),
     embedded: css({

@@ -70,6 +70,8 @@ export function AppNotificationList() {
 function getStyles(theme: GrafanaTheme2) {
   return {
     wrapper: css({
+      display: 'none',
+      opacity: 0,
       label: 'app-notifications-list',
       zIndex: theme.zIndex.portal,
       minWidth: 400,

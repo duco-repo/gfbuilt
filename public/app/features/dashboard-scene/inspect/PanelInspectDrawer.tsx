@@ -7,6 +7,7 @@ import {
   VizPanel,
   SceneObjectRef,
 } from '@grafana/scenes';
+import { locationUtil, OrgRole } from '@grafana/data';
 import { Alert, Drawer, Tab, TabsBar } from '@grafana/ui';
 import { getDataSourceWithInspector } from 'app/features/dashboard/components/Inspector/hooks';
 import { supportsDataQuery } from 'app/features/dashboard/components/PanelEditor/utils';
@@ -21,6 +22,7 @@ import { InspectMetaDataTab } from './InspectMetaDataTab';
 import { InspectQueryTab } from './InspectQueryTab';
 import { InspectStatsTab } from './InspectStatsTab';
 import { SceneInspectTab } from './types';
+import { contextSrv } from 'app/core/services/context_srv';
 
 interface PanelInspectDrawerState extends SceneObjectState {
   tabs?: SceneInspectTab[];
@@ -47,6 +49,7 @@ export class PanelInspectDrawer extends SceneObjectBase<PanelInspectDrawerState>
    * That is why there is a retry argument here and a setTimeout, to try again a bit later.
    */
   async buildTabs(retry: number) {
+    const isViewerRole = contextSrv.user.orgRole === OrgRole.Viewer;
     const panelRef = this.state.panelRef;
     const plugin = panelRef.resolve()?.getPlugin();
     const tabs: SceneInspectTab[] = [];
@@ -65,7 +68,9 @@ export class PanelInspectDrawer extends SceneObjectBase<PanelInspectDrawerState>
 
         tabs.push(new InspectDataTab({ panelRef }));
         tabs.push(new InspectStatsTab({ panelRef }));
-        tabs.push(new InspectQueryTab({ panelRef }));
+        if (!isViewerRole) {
+          tabs.push(new InspectQueryTab({ panelRef }));
+        }
 
         const dsWithInspector = await getDataSourceWithInspector(data.state.data);
         if (dsWithInspector) {
@@ -73,7 +78,9 @@ export class PanelInspectDrawer extends SceneObjectBase<PanelInspectDrawerState>
         }
       }
 
-      tabs.push(new InspectJsonTab({ panelRef, onClose: this.onClose }));
+      if (!isViewerRole) {
+        tabs.push(new InspectJsonTab({ panelRef, onClose: this.onClose }));
+      }
     }
 
     this.setState({ tabs });

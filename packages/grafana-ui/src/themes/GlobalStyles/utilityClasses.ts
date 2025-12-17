@@ -187,5 +187,25 @@ export function getUtilityClassStyles(theme: GrafanaTheme2) {
         maxWidth: theme.breakpoints.values.xl,
       },
     },
+    '.scrollbar-refine': {
+      scrollbarWidth: 'thin',
+      scrollbarColor: `${theme.colors.primary.transparent} transparent`,
+    },
+    '.scrollbar-refine::-webkit-scrollbar': {
+      width: '8px',
+      height: '8px',
+    },
+    '.scrollbar-refine::-webkit-scrollbar-track': {
+      background: theme.colors.background.secondary,
+      borderRadius: '4px',
+    },
+    '.scrollbar-refine::-webkit-scrollbar-thumb': {
+      background: 'rgba(166, 180, 206, 0.5)',
+      borderRadius: '4px'
+    },
+    '.scrollbar-refine::-webkit-scrollbar-thumb:hover': {
+      background: 'rgba(166, 180, 206, 0.6)',
+      borderRadius: '4px'
+    },
   });
 }

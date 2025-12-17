@@ -90,6 +90,8 @@ export const VizTooltipFooter = ({ dataLinks, actions = [], annotate, adHocFilte
   const hasOneClickLink = useMemo(() => dataLinks.some((link) => link.oneClick === true), [dataLinks]);
   const hasOneClickAction = useMemo(() => actions.some((action) => action.oneClick === true), [actions]);
 
+  const isSoloEmbed = sessionStorage?.getItem('isSoloEmbed') === 'Y';
+
   return (
     <div className={styles.wrapper}>
       {!hasOneClickAction && renderDataLinks(dataLinks, styles)}
@@ -105,7 +107,7 @@ export const VizTooltipFooter = ({ dataLinks, actions = [], annotate, adHocFilte
           ))}
         </div>
       )}
-      {!hasOneClickLink && !hasOneClickAction && annotate != null && (
+      {!hasOneClickLink && !hasOneClickAction && annotate != null && !isSoloEmbed && (
         <div className={styles.footerSection}>
           <Button icon="comment-alt" variant="secondary" size="sm" id={ADD_ANNOTATION_ID} onClick={annotate}>
             <Trans i18nKey="grafana-ui.viz-tooltip.footer-add-annotation">Add annotation</Trans>

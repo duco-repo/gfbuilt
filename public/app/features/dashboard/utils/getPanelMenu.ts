@@ -1,6 +1,7 @@
 import { PanelMenuItem, urlUtil, PluginExtensionLink } from '@grafana/data';
 import { t } from '@grafana/i18n';
 import { locationService } from '@grafana/runtime';
+import { OrgRole } from '@grafana/data';
 import { createErrorNotification } from 'app/core/copy/appNotification';
 import { notifyApp } from 'app/core/reducers/appNotification';
 import { contextSrv } from 'app/core/services/context_srv';
@@ -34,10 +35,16 @@ export function getPanelMenu(
   panel: PanelModel,
   extensions: PluginExtensionLink[]
 ): PanelMenuItem[] {
+  const isEditorRole = contextSrv.user.orgRole === OrgRole.Admin || contextSrv.user.orgRole === OrgRole.Editor;
+
+  console.log('contextSrv.user.orgRole >>', contextSrv.user.orgRole);
+
   const onViewPanel = (event: React.MouseEvent) => {
     event.preventDefault();
+    const searchObject = locationService.getSearchObject();
+    const isViewing = searchObject.viewPanel !== undefined && searchObject.viewPanel === panel.id.toString();
     locationService.partial({
-      viewPanel: panel.id,
+      viewPanel: isViewing ? undefined : panel.id,
     });
   };
 
@@ -107,9 +114,17 @@ export function getPanelMenu(
   if (!panel.isEditing) {
     menu.push({
       text: t('panel.header-menu.view', `View`),
-      iconClassName: 'eye',
+      iconClassName: 'expand-arrows-alt',
       onClick: onViewPanel,
       shortcut: 'v',
+    });
+  }
+
+  if (!isEditorRole && !panel.isEditing) {
+    menu.push({
+      text: t('panel.header-menu.inspect-data', `Data`),
+      onClick: (e: React.MouseEvent) => onInspectPanel(InspectTab.Data),
+      iconClassName: 'file-alt',
     });
   }
 
@@ -122,12 +137,14 @@ export function getPanelMenu(
     });
   }
 
-  menu.push({
-    text: t('panel.header-menu.share', `Share`),
-    iconClassName: 'share-alt',
-    onClick: onSharePanel,
-    shortcut: 'p s',
-  });
+  if (isEditorRole) {
+    menu.push({
+      text: t('panel.header-menu.share', `Share`),
+      iconClassName: 'share-alt',
+      onClick: onSharePanel,
+      shortcut: 'p s',
+    });
+  }
 
   if (
     contextSrv.hasAccessToExplore() &&
@@ -164,13 +181,15 @@ export function getPanelMenu(
     onClick: (e: React.MouseEvent) => onInspectPanel(InspectTab.JSON),
   });
 
-  menu.push({
-    type: 'submenu',
-    text: t('panel.header-menu.inspect', `Inspect`),
-    iconClassName: 'info-circle',
-    shortcut: 'i',
-    subMenu: inspectMenu,
-  });
+  if (inspectMenu.length && isEditorRole) {
+      menu.push({
+        type: 'submenu',
+        text: t('panel.header-menu.inspect', `Inspect`),
+        iconClassName: 'info-circle',
+        shortcut: 'i',
+        subMenu: inspectMenu,
+    });
+  }
 
   const createAlert = async () => {
     let formValues: Partial<RuleFormValues> | undefined;
@@ -275,7 +294,7 @@ export function getPanelMenu(
     });
   }
 
-  if (subMenu.length) {
+  if (subMenu.length && isEditorRole) {
     menu.push({
       type: 'submenu',
       text: t('panel.header-menu.more', `More...`),

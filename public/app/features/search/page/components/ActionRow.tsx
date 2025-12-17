@@ -1,7 +1,8 @@
 import { css } from '@emotion/css';
 import { FormEvent } from 'react';
 
-import { GrafanaTheme2, SelectableValue } from '@grafana/data';
+import { contextSrv } from 'app/core/services/context_srv';
+import { GrafanaTheme2, OrgRole, SelectableValue } from '@grafana/data';
 import { Trans, t } from '@grafana/i18n';
 import { config } from '@grafana/runtime';
 import { Button, Checkbox, Stack, RadioButtonGroup, useStyles2 } from '@grafana/ui';
@@ -70,6 +71,8 @@ export const ActionRow = ({
 
   const layout = getValidQueryLayout(state);
 
+  const isViewerRole = contextSrv.user.orgRole === OrgRole.Viewer;
+
   // Disabled folder layout option when query is present
   const disabledOptions =
     state.tag.length || state.starred || state.query || state.datasource || state.panel_type
@@ -90,7 +93,7 @@ export const ActionRow = ({
           />
         )}
 
-        {showStarredFilter && (
+        {showStarredFilter && !isViewerRole && (
           <div className={styles.checkboxWrapper}>
             <Checkbox
               label={t('search.actions.starred', 'Starred')}

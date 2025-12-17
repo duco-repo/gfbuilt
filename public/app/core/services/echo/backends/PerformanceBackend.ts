@@ -1,6 +1,6 @@
 import { EchoBackend, EchoEvent, EchoEventType } from '@grafana/runtime';
 
-import { backendSrv } from '../../backend_srv';
+// import { backendSrv } from '../../backend_srv';
 
 export interface PerformanceEventPayload {
   name: string;
@@ -32,17 +32,17 @@ export class PerformanceBackend implements EchoBackend<PerformanceEvent, Perform
       return;
     }
 
-    backendSrv
-      .post(
-        '/api/frontend-metrics',
-        {
-          events: this.buffer,
-        },
-        { showErrorAlert: false }
-      )
-      .catch(() => {
-        // Just swallow this error - it's non-critical
-      });
+    // backendSrv
+    //   .post(
+    //     '/api/frontend-metrics',
+    //     {
+    //       events: this.buffer,
+    //     },
+    //     { showErrorAlert: false }
+    //   )
+    //   .catch(() => {
+    //     // Just swallow this error - it's non-critical
+    //   });
 
     this.buffer = [];
   };

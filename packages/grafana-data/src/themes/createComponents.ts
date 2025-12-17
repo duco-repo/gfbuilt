@@ -107,7 +107,7 @@ export function createComponents(colors: ThemeColors, shadows: ThemeShadows): Th
       padding: 2,
     },
     overlay: {
-      background: colors.mode === 'dark' ? 'rgba(63, 62, 62, 0.5)' : 'rgba(208, 209, 211, 0.5)',
+      background: colors.mode === 'dark' ? 'rgba(57, 64, 77, 0.45)' : 'rgba(217, 223, 234, 0.24)',
     },
     sidemenu: {
       width: 57,

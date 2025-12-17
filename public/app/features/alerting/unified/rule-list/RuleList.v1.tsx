@@ -3,6 +3,7 @@ import { useAsyncFn, useInterval } from 'react-use';
 
 import { t } from '@grafana/i18n';
 import { Button, Stack } from '@grafana/ui';
+import { OrgRole, urlUtil } from '@grafana/data';
 import { useQueryParams } from 'app/core/hooks/useQueryParams';
 import { useDispatch } from 'app/types/store';
 import { CombinedRuleNamespace } from 'app/types/unified-alerting';
@@ -26,6 +27,8 @@ import { GRAFANA_RULES_SOURCE_NAME, getAllRulesSourceNames } from '../utils/data
 
 import { RuleListPageTitle } from './RuleListPageTitle';
 import { RuleListActionButtons } from './components/RuleListActionButtons';
+
+import { contextSrv } from 'app/core/services/context_srv';
 
 const VIEWS = {
   groups: RuleListGroupView,
@@ -61,6 +64,8 @@ const RuleListV1 = () => {
   const loading = rulesDataSourceNames.some(
     (name) => promRuleRequests[name]?.loading || rulerRuleRequests[name]?.loading
   );
+
+  const isViewerRole = contextSrv.user.orgRole === OrgRole.Viewer;
 
   const promRequests = Object.entries(promRuleRequests);
   const rulerRequests = Object.entries(rulerRuleRequests);
@@ -138,7 +143,7 @@ const RuleListV1 = () => {
                 {expandAll
                   ? t('alerting.rule-list-v1.collapse-all', 'Collapse all')
                   : t('alerting.rule-list-v1.expand-all', 'Expand all')}
-              </Button>
+              </Button>//unchanged
             )}
           </Stack>
         )}
